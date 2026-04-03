@@ -17,16 +17,17 @@ def add_ema(df: pd.DataFrame, span: int = 20, col_name: str | None = None) -> pd
     df = df.copy()
     if col_name is None:
         col_name = f"ema_{span}"
-    df[col_name] = df["close"].ewm(span=span, adjust=False).mean()  ### BURDA KALDIK
+    df[col_name] = df["close"].ewm(span=span, adjust=False).mean()  ## ewm parametre belirtiyor  mean ise bu kurallara uygun bir ottalama işlemi yapıyor weighted mean gibi
+
     return df
 
 
-def add_rsi(df: pd.DataFrame, period: int = 14) -> pd.DataFrame:
+def add_rsi(df: pd.DataFrame, period: int = 14) -> pd.DataFrame:#momentum
     df = df.copy()
 
-    delta = df["close"].diff()
-    gain = delta.clip(lower=0)
-    loss = -delta.clip(upper=0)
+    delta = df["close"].diff() # bir önceki ile fark
+    gain = delta.clip(lower=0)# 0dan küçükleri 0 yap
+    loss = -delta.clip(upper=0)# 0dan büyükleri 0 yap negatif olanları 
 
     avg_gain = gain.ewm(alpha=1 / period, adjust=False).mean()
     avg_loss = loss.ewm(alpha=1 / period, adjust=False).mean()
