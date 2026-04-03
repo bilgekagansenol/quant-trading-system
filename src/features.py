@@ -6,8 +6,10 @@ import pandas as pd
 
 def add_returns(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()
-    df["return"] = df["close"].pct_change()
-    df["log_return"] = np.log(df["close"] / df["close"].shift(1))
+    df["return"] = df["close"].pct_change() #pct_change  şimdiki ile önceki element arasındaki farkı oranlayarak verir.  100 ile çarğılırsa yüzdelik değeri de alınabilir.
+
+    df["log_return"] = np.log(df["close"] / df["close"].shift(1)) # burdsa shift ile 1 önceki elementin değerini alıyor.
+
     return df
 
 
@@ -15,7 +17,7 @@ def add_ema(df: pd.DataFrame, span: int = 20, col_name: str | None = None) -> pd
     df = df.copy()
     if col_name is None:
         col_name = f"ema_{span}"
-    df[col_name] = df["close"].ewm(span=span, adjust=False).mean()
+    df[col_name] = df["close"].ewm(span=span, adjust=False).mean()  ### BURDA KALDIK
     return df
 
 
